@@ -17,7 +17,7 @@ public class GameOverPanel : MonoBehaviour
 
     public void SetWinnerText(PawnColor winnerPawnColor)
     {
-        WinnerText.text = winnerPawnColor.ToString().ToUpper() + " WINS";
+        WinnerText.text = winnerPawnColor.ToString().ToUpper() + " ПОБЕДИЛИ";
     }
 
     public void DisableBoard()
