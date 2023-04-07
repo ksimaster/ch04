@@ -5,6 +5,7 @@ public class TurnTextChanger : MonoBehaviour
 {
     private TextMeshProUGUI turnText;
     private Animator textAnimator;
+    private string color;
 
     private void Start()
     {
@@ -14,7 +15,9 @@ public class TurnTextChanger : MonoBehaviour
 
     public void ChangeTurnText(PawnColor pawnColor)
     {
-        turnText.text = pawnColor.ToString().ToUpper() + "'S TURN";
+        color = pawnColor.ToString().ToUpper() == "WHITE" ? "БЕЛЫХ" : "ЧЕРНЫХ";
+        // turnText.text = pawnColor.ToString().ToUpper() + "'S TURN";
+        turnText.text = "ХОД " + color;
         textAnimator.SetTrigger("NextTurn");
     }
 }
