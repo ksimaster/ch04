@@ -7,6 +7,7 @@ public class GameOverPanel : MonoBehaviour
     public GameObject Board;
     public TextMeshProUGUI WinnerText;
     public GameAudio GameAudio;
+    private string color;
 
     private Animator gameOverPanelAnimator;
 
@@ -17,7 +18,9 @@ public class GameOverPanel : MonoBehaviour
 
     public void SetWinnerText(PawnColor winnerPawnColor)
     {
-        WinnerText.text = winnerPawnColor.ToString().ToUpper() + " ПОБЕДИЛИ";
+        // WinnerText.text = winnerPawnColor.ToString().ToUpper() + " ПОБЕДИЛИ";
+        color = winnerPawnColor.ToString().ToUpper() == "WHITE" ? "БЕЛЫЕ" : "ЧЕРНЫЕ";
+        WinnerText.text = color + " ПОБЕДИЛИ";
     }
 
     public void DisableBoard()
