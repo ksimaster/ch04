@@ -4,13 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - piece
-  - square
-  - selectedPiece
-  - redPiece
-  - blackPiece
-  - redScore
-  - blackScore
+  - Audio
   layers:
   - Default
   - TransparentFX
@@ -20,7 +14,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - PostProcessing
   - 
   - 
   - 
