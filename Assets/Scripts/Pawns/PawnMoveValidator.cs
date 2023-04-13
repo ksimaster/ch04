@@ -91,30 +91,65 @@ public class PawnMoveValidator : MonoBehaviour
 
     private bool IsOpponentsPawnOnOneBeforeTargetTile()
     {
-        if (!IsPawnOnOneBeforeTargetTile())
+        var pawnBeforeTargetTile = PawnBeforeTargetTile();
+        if (pawnBeforeTargetTile == 0)
             return false;
-        var potentialPawnToCapture = GetPotentialPawnToCapture();
+        var potentialPawnToCapture = GetPotentialPawnToCapture(pawnBeforeTargetTile);
         if (!IsPawnDifferentColorThanLastClickedPawn(potentialPawnToCapture))
             return false;
         pawnToCapture = potentialPawnToCapture;
         return true;
     }
 
-    private bool IsPawnOnOneBeforeTargetTile()
+    private int PawnBeforeTargetTile()
     {
+        
         var moveDirectionInIndex = GetDiagonalMoveDirectionInIndex();
-        for (var checkedTileIndex = currentTileIndex + moveDirectionInIndex;
+        if (!IsPawnKing())
+        {
+            for (var checkedTileIndex = currentTileIndex + moveDirectionInIndex;
             checkedTileIndex != targetTileIndex;
             checkedTileIndex += moveDirectionInIndex)
-            if (IsTileOccupied(checkedTileIndex) && checkedTileIndex != targetTileIndex - moveDirectionInIndex)
-                return false;
-        return IsTileOccupied(targetTileIndex - moveDirectionInIndex);
+                if (IsTileOccupied(checkedTileIndex) && checkedTileIndex != targetTileIndex - moveDirectionInIndex)
+                    return 0;
+
+            return IsTileOccupied(targetTileIndex - moveDirectionInIndex) ? 1 : 0;
+        }
+        else
+        {
+            if (IsTileOccupied(targetTileIndex))
+            {
+                return 0;
+            }
+
+            var occupiedCount = 0;
+            var pawnBefore = 0;
+            for (var checkedTileIndex = currentTileIndex + moveDirectionInIndex;
+                    checkedTileIndex != targetTileIndex;
+                    checkedTileIndex += moveDirectionInIndex)
+            {
+                pawnBefore += occupiedCount == 1 ? 1 : 0;
+                if (IsTileOccupied(checkedTileIndex))
+                    occupiedCount++;
+            }
+
+            if (occupiedCount == 1)
+            {
+                return pawnBefore + 1;
+            }
+
+            return 0;
+        }
     }
 
-    private GameObject GetPotentialPawnToCapture()
+    private GameObject GetPotentialPawnToCapture(int pawnBeforeTargetTile)
     {
         var moveDirectionInIndex = GetDiagonalMoveDirectionInIndex();
-        return tileGetter.GetTile(targetTileIndex - moveDirectionInIndex).GetComponent<TileProperties>().GetPawn();
+        var potentialTileIndex = targetTileIndex;
+        for (var i = 0; i < pawnBeforeTargetTile; i++)
+            potentialTileIndex -= moveDirectionInIndex;
+
+        return tileGetter.GetTile(potentialTileIndex).GetComponent<TileProperties>().GetPawn();
     }
 
     private bool IsPawnDifferentColorThanLastClickedPawn(GameObject pawnToCheck)
