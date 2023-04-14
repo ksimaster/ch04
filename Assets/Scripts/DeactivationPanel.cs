@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class DeactivationPanel : MonoBehaviour
 {
-
+    public GameObject panelGameOver;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse1) || panelGameOver.activeSelf)
         {
             gameObject.SetActive(false);
         }
