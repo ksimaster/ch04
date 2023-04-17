@@ -13,8 +13,9 @@ public class CameraMover : MonoBehaviour
     public GameObject Board;
 
     public float zoomSpeed = 0.3f;
-   // public Button inButton;
-   // public Button outButton;
+    // public Button inButton;
+    // public Button outButton;
+    public Slider sliderZoom;
 
     private int boardSize;
     private float minOffset;
@@ -28,6 +29,10 @@ public class CameraMover : MonoBehaviour
         boardSize = tilesGenerator.BoardSize;
         SetInitialPosition();
         SetInitialRotation();
+        //нормировка слайдера
+        sliderZoom.maxValue = maxOffset;
+        sliderZoom.minValue = minOffset;
+        sliderZoom.value = 8f;
     }
 
     private void SetInitialPosition()
@@ -51,6 +56,7 @@ public class CameraMover : MonoBehaviour
         GetMouseInput();
         GetScrollInput();
         //GetMultiInput();
+        ZoomSlider();
         ChangePosition();
         ChangeRotation();
     }
@@ -103,6 +109,12 @@ public class CameraMover : MonoBehaviour
     public void ZoomOut()
     {
         localOffeset += zoomSpeed;
+        localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
+    }
+
+    private void ZoomSlider()
+    {
+        localOffeset = sliderZoom.value;
         localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
     }
 
