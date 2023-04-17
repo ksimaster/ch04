@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraMover : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class CameraMover : MonoBehaviour
     public float ScrollSmoothing;
     public float InitialRotation;
     public GameObject Board;
+
+    public float zoomSpeed = 0.3f;
+   // public Button inButton;
+   // public Button outButton;
 
     private int boardSize;
     private float minOffset;
@@ -45,6 +50,7 @@ public class CameraMover : MonoBehaviour
     {
         GetMouseInput();
         GetScrollInput();
+        //GetMultiInput();
         ChangePosition();
         ChangeRotation();
     }
@@ -64,6 +70,39 @@ public class CameraMover : MonoBehaviour
     {
         var scroll = Input.GetAxis("Mouse ScrollWheel");
         localOffeset -= scroll * ScrollSensitivity;
+        localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
+    }
+
+    private void GetMultiInput()
+    {
+            if (Input.touchCount == 2)
+            {
+                Touch touchZero = Input.GetTouch(0);
+                Touch touchOne = Input.GetTouch(1);
+
+                Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+                Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+                float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+                float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+                float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            //transform.localScale += new Vector3(deltaMagnitudeDiff * zoomSpeed, deltaMagnitudeDiff * zoomSpeed, deltaMagnitudeDiff * zoomSpeed);
+            localOffeset = deltaMagnitudeDiff * zoomSpeed;
+            localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
+        }
+    }
+
+    public void ZoomIn()
+    {
+        localOffeset -= zoomSpeed;
+        localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
+    }
+
+    public void ZoomOut()
+    {
+        localOffeset += zoomSpeed;
         localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
     }
 
