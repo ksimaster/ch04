@@ -75,8 +75,9 @@ public class CameraMover : MonoBehaviour
     private void GetScrollInput()
     {
         var scroll = Input.GetAxis("Mouse ScrollWheel");
-        localOffeset -= scroll * ScrollSensitivity;
-        localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
+        //localOffeset -= scroll * ScrollSensitivity;
+        //localOffeset = Mathf.Clamp(localOffeset, minOffset, maxOffset);
+        sliderZoom.value -= scroll * ScrollSensitivity;
     }
 
     private void GetMultiInput()
