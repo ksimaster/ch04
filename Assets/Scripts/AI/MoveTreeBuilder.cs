@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MoveTreeBuilder : MonoBehaviour
 {
+    private const int MaxNodes = 1000;
     private MoveChecker moveChecker;
     private AIPawnMover aiPawnMover;
     private TileGetter tileGetter;
@@ -57,6 +58,7 @@ public class MoveTreeBuilder : MonoBehaviour
     {
         moveTree = new TreeNode<Move>(initialMove);
         AddMovesToTreeNode(moveTree, moveTreeDepth, int.MinValue, int.MaxValue);
+        Debug.Log($"Total node checked: {moveTree.total[0]}");
     }
 
     private void AddMovesToTreeNode(TreeNode<Move> treeNode, int depth, int alpha, int beta)
@@ -109,6 +111,9 @@ public class MoveTreeBuilder : MonoBehaviour
             SetAlphaAndBeta(IsMoveByMaximizingPlayer(treeNode), moveTreeNode.Value.Score, ref alpha, ref beta);
             if (beta <= alpha)
                 return;
+
+            //if (treeNode.total[0] > MaxNodes)
+            //    return;
         }
     }
 
@@ -133,6 +138,9 @@ public class MoveTreeBuilder : MonoBehaviour
 
     private void AddNewMove(TreeNode<Move> treeNode, int depth, int alpha, int beta)
     {
+        if (treeNode.total[0] > MaxNodes)
+            return;
+
         foreach (var pawn in GetPawnsToCheck(treeNode))
         {
             if (!pawn.activeInHierarchy) continue;
@@ -140,6 +148,9 @@ public class MoveTreeBuilder : MonoBehaviour
             TileIndex pawnTileIndex = pawn.GetComponent<IPawnProperties>().GetTileIndex();
             foreach (var moveIndex in moves)
             {
+                if (treeNode.total[0] > MaxNodes)
+                    return;
+
                 var move = new Move(pawnTileIndex, moveIndex);
                 var moveTreeNode = treeNode.AddChild(move);
                 AddMovesToTreeNode(moveTreeNode, depth - 1, alpha, beta);
