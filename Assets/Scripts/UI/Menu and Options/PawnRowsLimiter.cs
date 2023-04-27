@@ -13,7 +13,11 @@ public class PawnRowsLimiter : MonoBehaviour
     public void LimitMaxPawnRows(Slider BoardSizesSlider)
     {
         int boardSize = Mathf.RoundToInt(BoardSizesSlider.value);
-        pawnRowsSlider.maxValue = (boardSize - 1) / 2;
+        var val = (boardSize - 1) / 2;
+
+        if (val > 3) val = 3;
+
+        pawnRowsSlider.maxValue = val;
         if (pawnRowsSlider.value > pawnRowsSlider.maxValue)
             pawnRowsSlider.value = pawnRowsSlider.maxValue;
     }
