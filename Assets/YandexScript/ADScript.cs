@@ -68,6 +68,7 @@ public class ADScript : MonoBehaviour
 
     IEnumerator Pause()
     {
+        yield return new WaitForSeconds(1f);
         inMainMenuButton.SetActive(false);
         adsText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
