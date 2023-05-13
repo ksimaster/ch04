@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MoveChecker : MonoBehaviour
 {
+    public PawnMover pawnMover;
     private LinkedList<GameObject> whitePawns = new LinkedList<GameObject>();
     private LinkedList<GameObject> blackPawns = new LinkedList<GameObject>();
     private int boardSize;
@@ -27,6 +28,20 @@ public class MoveChecker : MonoBehaviour
             else
                 blackPawns.AddLast(element.gameObject);
         }
+
+        if (pawnMover != null)
+            pawnMover.Highlight();
+    }
+
+
+    public LinkedList<GameObject> getWhitePawns()
+    {
+        return whitePawns;
+    }
+
+    public LinkedList<GameObject> getBlackPawns()
+    {
+        return blackPawns;
     }
 
     public bool PawnsHaveCapturingMove(PawnColor pawnsColor)

@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PawnMover : MonoBehaviour
@@ -17,6 +19,7 @@ public class PawnMover : MonoBehaviour
     private CPUPlayer cpuPlayer;
     private bool isPawnMoving;
     private bool isMoveMulticapturing;
+    private List<GameObject> selectedPawns = new List<GameObject>();
 
     private void Awake()
     {
@@ -57,6 +60,9 @@ public class PawnMover : MonoBehaviour
 
     private void AddPawnSelection()
     {
+        var unselect = selectedPawns.Where(x => x != lastClickedPawn && x != null).ToList();
+        unselect.ForEach(pawn => pawn.GetComponent<IPawnProperties>().RemovePawnSelection());
+        selectedPawns.Clear();
         lastClickedPawn.GetComponent<IPawnProperties>().AddPawnSelection();
     }
 
@@ -142,6 +148,35 @@ public class PawnMover : MonoBehaviour
         lastClickedPawn = null;
         isMoveMulticapturing = false;
         turnHandler.NextTurn();
+        Highlight();
+    }
+
+    public void Highlight()
+    {
+        if (turnHandler.GetTurn() == PawnColor.White)
+        {
+            foreach (var pawn in moveChecker.getWhitePawns())
+            {
+                if (pawn != null && CanPawnBeSelected(pawn))
+                {
+                    selectedPawns.Add(pawn);
+                    pawn.GetComponent<IPawnProperties>().AddPawnSelection();
+                }
+            }
+        }
+
+        if (!turnHandler.isGameVsCPU && turnHandler.GetTurn() == PawnColor.Black)
+        {
+            foreach (var pawn in moveChecker.getBlackPawns())
+            {
+                if (pawn != null && CanPawnBeSelected(pawn))
+                {
+                    selectedPawns.Add(pawn);
+                    pawn.GetComponent<IPawnProperties>().AddPawnSelection();
+                }
+            }
+        }
+
     }
 
     private IEnumerator MoveHorizontal(Vector3 targetPosition)
