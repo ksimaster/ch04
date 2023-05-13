@@ -5,11 +5,11 @@ public class TurnHandler : MonoBehaviour
     public PawnColor StartingPawnColor;
     public TurnTextChanger TurnTextChanger;
     public GameOverPanel GameOverPanel;
+    public bool isGameVsCPU;
 
     private PawnColor turn;
     private int whitePawnCount;
     private int blackPawnCount;
-    private bool isGameVsCPU;
     private CPUPlayer cpuPlayer;
 
     private void Awake()
