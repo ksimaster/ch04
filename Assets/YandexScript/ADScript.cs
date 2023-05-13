@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ADScript : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class ADScript : MonoBehaviour
     //public float lowBalanceFuel;
     public string nameScene;
     public GameObject PanelDeath;
+    public GameObject inMainMenuButton;
+    public TMP_Text adsText;
+
     private int i;
     public void ShareFriend(){
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -56,8 +60,32 @@ public class ADScript : MonoBehaviour
         if (PanelDeath.activeSelf && i == 0) 
         {
             i++;
-            ShowAdInterstitial();
+            StartCoroutine("Pause");
+           // ShowAdInterstitial();
         } 
+        
+    }
+
+    IEnumerator Pause()
+    {
+        yield return new WaitForSeconds(1f);
+        inMainMenuButton.SetActive(false);
+        adsText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        adsText.text = "До начала рекламы: 4";
+        yield return new WaitForSeconds(1f);
+        adsText.text = "До начала рекламы: 3";
+        yield return new WaitForSeconds(1f);
+        adsText.text = "До начала рекламы: 2";
+        yield return new WaitForSeconds(1f);
+        adsText.text = "До начала рекламы: 1";
+        yield return new WaitForSeconds(1f);
+        Debug.Log("Ads");
+#if UNITY_WEBGL && !UNITY_EDITOR
+    	WebGLPluginJS.InterstitialFunction();
+#endif
+        adsText.gameObject.SetActive(false);
+        inMainMenuButton.SetActive(true);
         
     }
     private void OnApplicationFocus(bool focus)
